@@ -28,24 +28,36 @@ async def on_ready():
 
 # VOICE NOTIFY FUNCTIONALITY ------------------------------
 # sends a notify into configured text channel when user leaves, reconnects or joins voice channel
-@client.event
-async def on_voice_state_update(member, before, after):
+async def voice_notify_callback(member, before, after):
+    if before.channel != None and after.channel == None:
+        await textch.send(f"**{member.display_name}** вышел из чата **{before.channel.name}**")
+    elif before.channel == None and after.channel != None:
+        await textch.send(f"**{member.display_name}** присоединился к чату **{after.channel.name}**")
+    elif before.channel != None and after.channel != None:
+        await textch.send(f"**{member.display_name}** переместился из чата **{before.channel.name}** в чат **{after.channel.name}**")
+# VOICE NOTIFY FUNCTIONALITY END --------------------------
+
+# TEXT CHANNEL FOR VOICE FUNCTIONALITY --------------------
+# makes configured text channel visible only for people in voice
+async def text_for_voice_callback(member, before, after):
     overwrites = textch.overwrites
     if before.channel != None and after.channel == None:
         try:
             overwrites[member].view_channel = False
         except KeyError:
             overwrites = {**overwrites, member: PermissionOverwrite(view_channel=False)}
-        await textch.send(f"**{member.display_name}** вышел из чата **{before.channel.name}**")
     elif before.channel == None and after.channel != None:
         try:
             overwrites[member].view_channel = True
         except KeyError:
             overwrites = {**overwrites, member: PermissionOverwrite(view_channel=True)}
-        await textch.send(f"**{member.display_name}** присоединился к чату **{after.channel.name}**")
-    elif before.channel != None and after.channel != None:
-        await textch.send(f"**{member.display_name}** переместился из чата **{before.channel.name}** в чат **{after.channel.name}**")
     await textch.edit(overwrites=overwrites)
-# VOICE NOTIFY FUNCTIONALITY END --------------------------
+# TEXT CHANNEL FOR VOICE FUNCTIONALITY END ----------------
+
+# set up callbacks
+@client.event
+async def on_voice_state_update(member, before, after):
+    voice_notify_callback(member, before, after)
+    text_for_voice_callback(member, before, after)
 
 client.run(TOKEN)
