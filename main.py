@@ -1,31 +1,13 @@
 from discord import *
-# import json
-# from mediawiki import MediaWiki
-# import re
+import os
 
-# wiki = MediaWiki(lang="ru")
-# lurk = MediaWiki(url="https://lurkmo.re/api.php")
 client = Client()
 
 CHANNEL_ID = 853587303100448778
-TOKEN = "NzAwMjAzMTMzNTYwOTQ2NzI4.Xpfg_A.BViAAEE-o4P2wYKN15VFCFTY_IA"
+TOKEN = os.environ.get("DISCORD-TOKEN")
 
-# aliases = (
-#     'что значит ',
-#     'что за ',
-#     'что такое ',
-#     'what is ',
-#     "what's ",
-#     'wtf is ',
-#     '!wikis ',
-#     '/wikis ',
-#     '#wikis ',
-#     '@wikis ',
-#     'find on wiki ',
-# )
-
-# lang = "ru"
-
+if not TOKEN:
+    raise Exception("can't get token from enviroment")
 
 @client.event
 async def on_ready():
