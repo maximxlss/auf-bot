@@ -24,15 +24,15 @@ async def on_voice_state_update(member, before, after):
             overwrites[member].view_channel = False
         except KeyError:
             overwrites = {**overwrites, member: PermissionOverwrite(view_channel=False)}
-        await textch.send(f"**{member.display_name}** вышел из чата **{before.channel.display_name}**")
+        await textch.send(f"**{member.display_name}** вышел из чата **{before.channel.name}**")
     elif before.channel == None and after.channel != None:
         try:
             overwrites[member].view_channel = True
         except KeyError:
             overwrites = {**overwrites, member: PermissionOverwrite(view_channel=True)}
-        await textch.send(f"**{member.display_name}** присоединился к чату **{after.channel.display_name}**")
+        await textch.send(f"**{member.display_name}** присоединился к чату **{after.channel.name}**")
     elif before.channel != None and after.channel != None:
-        await textch.send(f"**{member.display_name}** переместился из чата **{before.channel.display_name}** в чат **{after.channel.display_name}**")
+        await textch.send(f"**{member.display_name}** переместился из чата **{before.channel.name}** в чат **{after.channel.name}**")
     await textch.edit(overwrites=overwrites)
 
 client.run(TOKEN)
