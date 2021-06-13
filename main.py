@@ -6,6 +6,8 @@ client = Client()
 CHANNEL_ID = 853587303100448778
 TOKEN = os.environ.get("DISCORD-TOKEN")
 
+textch = None
+
 if not TOKEN:
     raise Exception("can't get token from enviroment")
 
